@@ -33,6 +33,7 @@ let createQuestion = _.curry((questionPath, keyword, value) => ({
 
 let sexQuestion = createQuestion('demographics.SEX', false)
 let alcoholQuestion = createQuestion('alcohol_consumption.ALCDAY5', true)
+let tobaccoQuestion = createQuestion('tobacco_use.KDAY2', true)
 
 let createSearch = questions => ({
   "aggs": {
@@ -62,6 +63,7 @@ let createSearch = questions => ({
 
 let state = new Map()
 state.set(sexQuestion, '')
+state.set(tobaccoQuestion, '')
 state.set(alcoholQuestion, '')
 
 let onChangeHandler = s => updateMap(
@@ -78,6 +80,8 @@ let createHandler = field => _.pipe(
 )
 
 let sexChangeHandler = createHandler(sexQuestion)
+let tobaccoChangeHandler = createHandler(tobaccoQuestion)
+let alcoholChangeHandler = createHandler(alcoholQuestion)
 
 let totalsBuckets = _.property('aggregations.total_by_parish.buckets')
 let parishBuckets = _.property('aggregations.question_by_parish.filtered_results.buckets')

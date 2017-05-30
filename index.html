@@ -14,6 +14,24 @@
       <option value="female">Female</option>
       <option value="male">Male</option>
     </select>
+    <h4>Tobacco Use:</h4>
+    <select id="tobacco-select" name="sex" onchange="return tobaccoChangeHandler(event)">
+      <option value=""></option>
+      <option value="Some days">Some days</option>
+      <option value="Every day">Every day</option>
+    </select>
+    <h4>Alcohol Consumption:</h4>
+    <select id="alcohol-select" name="sex" onchange="return alcoholChangeHandler(event)">
+      <option value=""></option>
+      <option value="1 Days per week">1 Days per week</option>
+      <option value="2 Days per week">2 Days per week</option>
+      <option value="3 Days per week">3 Days per week</option>
+      <option value="7 Days per week">7 Days per week</option>
+      <option value="30 Days in the past 30 days">30 Days in the past 30 days</option>
+      <option value="5 Days in the past 30 days">5 Days in the past 30 days</option>
+      <option value="1 Days in the past 30 days">1 Days in the past 30 days</option>
+      <option value="No drinks in past 30 days">No drinks in past 30 days</option>
+    </select>
     <svg xmlns:svg="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" version="1.0" id="louisiana-map" >
       <g id="parish-group" class="parishes">
         <path d="m 6.5,4 -0.2086,0.176 -0.0321,0.09 0.82725,5.722 0.20147,1.085 2.41757,7.426 2.15371,1.148 1.71155,2.225 -2.77771,0.07 -0.0178,-0.756 -0.18542,-0.28 -0.44928,-0.483 -0.40293,-0.297 -1.58319,-0.532 -0.33696,-0.07 -0.36727,0.08 -0.28348,0.178 -0.1034,0.09 -0.96632,1.141 -0.0535,0.339 0.0392,0.137 -0.0642,0.2 -0.68284,0.629 -1.04654,0.745 -1.77396,0.03 -0.2496,-11.459 -0.0802,-4.34 -0.0713,-3.189 4.38586,-0.1" class="parish-017" id="Caddo"></path>
