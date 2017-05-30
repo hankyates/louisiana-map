@@ -8,12 +8,32 @@ Printer Friendly Grayscale
 #252525
  */
 
-.bucket-0 {fill: #eff3ff}
-.bucket-1 {fill: #bdd7e7}
-.bucket-2 {fill: #6baed6}
-.bucket-3 {fill: #3182bd}
-.bucket-4 {fill: #08519c}
+.bucket-0 {fill: #eff3ff; background-color: #eff3ff; color: #6baed6}
+.bucket-1 {fill: #bdd7e7; background-color: #bdd7e7; color: #6baed6}
+.bucket-2 {fill: #6baed6; background-color: #6baed6; color: #eff3ff}
+.bucket-3 {fill: #3182bd; background-color: #3182bd; color: #bdd7e7}
+.bucket-4 {fill: #08519c; background-color: #08519c; color: #eff3ff}
 
+section select {
+}
+.map {
+  position: relative;
+}
+.legend {
+  padding: 0 1em 1em;
+  border: 1px solid #bdd7e7;
+  background-color: #eff3ff;
+  position: absolute;
+  top: 8%;
+  right: 0;
+}
+.legend span {
+  display: block;
+  border: 1px solid #08519c;
+  padding: 3px;
+  margin: 3px;
+  text-align: center;
+}
 #louisiana-map {
   display: none;
 }
