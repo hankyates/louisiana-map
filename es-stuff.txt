@@ -1,0 +1,91 @@
+GET _indices
+
+DELETE /test_brfss
+
+PUT /test_brfss
+{
+  "mappings": {
+    "survey_response": {
+      "properties": {
+        "demographics.zipcode.value": {
+          "type":  "keyword"
+        }
+      }
+    }
+  }
+}
+
+GET /test_brfss/_mapping
+
+GET /test_brfss/_search
+{
+   "query": {
+      "match_all": {}
+   }
+}
+
+POST /test_brfss/_search?size=0
+
+POST /test_brfss/_search?size=0
+{
+    "query": {
+        "term": {
+           "demographics.sex.value": {
+              "value": "female"
+           }
+        }
+    }, 
+    "aggs" : {
+        "zipcodes" : {
+            "terms" : {
+                "field" : "demographics.zipcode.value"  
+            } 
+        },
+        "parish" : {
+            "terms" : {
+                "field" : "demographics.parish.value"  
+            } 
+        }
+    }
+}
+
+POST /test_brfss/_search?size=0
+{
+   "aggs": {
+      "total_by_zipcode": {
+         "terms": {
+            "field": "demographics.CTYCODE1.value.keyword"
+         }
+      },
+      "question_by_zipcode": {
+         "filter": {
+            "bool": {
+               "must": [
+                  {
+                     "term": {
+                        "demographics.SEX.value": {
+                           "value": "female"
+                        }
+                     }
+                  },
+                  {
+                     "term": {
+                        "alcohol_consumption.ALCDAY5.value": {
+                           "value": "No drinks in past 30 days"
+                        }
+                     }
+                  }
+               ]
+            }
+         },
+         "aggs": {
+            "filtered_results": {
+               "terms": {
+                  "field": "demographics.CTYCODE1.value.keyword"
+               }
+            }
+         }
+      }
+   }
+}
+
