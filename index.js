@@ -165,11 +165,21 @@ let parishName = document.querySelector('.parish-name')
 let parishTotal = document.querySelector('.parish-total')
 let parishQuestionTotal = document.querySelector('.parish-question-number')
 
+var formatThousands = function(n, dp){
+  var s = ''+(Math.floor(n)), d = n % 1, i = s.length, r = '';
+  while ( (i -= 3) > 0 ) { r = ',' + s.substr(i, 3) + r; }
+  return s.substr(0, i + 3) + r + 
+    (d ? '.' + Math.round(d * Math.pow(10, dp || 2)) : '');
+}; 
+
 let mouseOverHandler = e => {
   hoverInfo.style.visibility = 'visible'
   parishName.innerHTML = e.target.id
-  //parishTotal.innerHTML = state.get('totalsMap')[e.target.classList[0]]
-  parishQuestionTotal.innerHTML = state.get('parishMap')[e.target.classList[0]] || 0
+  let filtered = state.get('parishMap')[e.target.classList[0]]
+  let total = state.get('totalsMap')[e.target.classList[0]]
+  let perOneHundredThousand = formatThousands(((100000 * filtered) / total || 0).toFixed(2))
+  parishTotal.innerHTML = filtered || 0
+  parishQuestionTotal.innerHTML = perOneHundredThousand
 }
 let mouseOutHandler = e => {
   hoverInfo.style.visibility = 'hidden'
