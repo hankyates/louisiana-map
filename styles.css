@@ -27,13 +27,16 @@ section select {
   top: 8%;
   right: 0;
 }
-.legend span {
-  display: block;
-  border: 1px solid #08519c;
+.legend .gradient {
+  background: linear-gradient(0deg, #08519c, #eff3ff);
+  min-height: 150px;
   padding: 3px;
   margin: 3px;
-  text-align: center;
+  position: relative;
 }
+.legend .gradient .top {position: absolute; top: 0; color: #08519c;}
+.legend .gradient .bottom {position: absolute; bottom: 0; color: #eff3ff}
+
 #louisiana-map {
   display: none;
 }
@@ -45,4 +48,16 @@ section select {
   fill-rule:nonzero;
   stroke:#000000;
   stroke-width:0.178287;
+}
+#parish-group path:hover {
+  stroke: #bdd7e7;
+}
+#hover-info {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  background-color: white;
+  border: 0.25em solid #08519c;
+  padding: 1em;
 }

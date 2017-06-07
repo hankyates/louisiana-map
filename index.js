@@ -1,5 +1,22 @@
 const MAX_SIZE = 10000
 
+// [r, g, b]
+const SMALL_COLOR = [239, 243, 255] // #eff3ff
+const LARGE_COLOR = [8, 81, 156] // #08519c
+
+let pickHex = _.curry((color1, color2, percentage) => {
+    let p = percentage;
+    let w = (p / 100) * 2 - 1;
+    let w1 = (w/1+1) / 2;
+    let w2 = 1 - w1;
+    let rgb = [Math.round(color1[0] * w1 + color2[0] * w2),
+            Math.round(color1[1] * w1 + color2[1] * w2),
+            Math.round(color1[2] * w1 + color2[2] * w2)];
+    return rgb;
+})
+
+let getColor = pickHex(LARGE_COLOR, SMALL_COLOR)
+
 var move = (x, y) =>
   Array.from(
     document.querySelectorAll('path')
@@ -99,16 +116,18 @@ const BUCKET_SIZE = 100 / 5
 
 let resetColors = () => {
   for (var i = 0, len = BUCKET_SIZE; i < len; i++) {
-    document.querySelectorAll('.bucket-' + i).forEach(el => el.classList.remove('bucket-' + i))
+    document.querySelectorAll('path.bucket-' + i).forEach(el => el.style.fill = '')
   }
 }
 
-let setColor = ([key, value]) => {
-  let parishEl = document.querySelector('path.parish-' + key.padStart(3, '0'))
+let fipsToClass = fips => 'parish-' + fips.padStart(3, '0')
+
+let setColor = ([fips, value]) => {
+  let parishEl = document.querySelector('path.' + fipsToClass(fips))
   if (parishEl) {
-    parishEl.classList.add('bucket-' + value)
+    parishEl.style.fill = 'rgb(' + getColor(value) + ')'
   } else {
-    console.error(key, value)
+    console.error(fips, value.join(','))
   }
 }
 
@@ -131,12 +150,46 @@ let updateMap = search =>
       let parishPercentageMap = _.fromPairs(
         _.entries(parishMap).map(([parishKey, parishValue]) => [parishKey, percentage(parishValue, _.prop(parishKey, totalsMap))])
       )
-      let percentageParishesByBucket = mapBuckets(parishPercentageMap)
       let updateColors = parishes => _.entries(parishes).forEach(setColor)
+      let createParishClassMap = parishes => _.mapKeys(fips => fipsToClass(fips), parishes)
 
-      updateColors(filterByParish(percentageParishesByBucket))
+      state.set('totalsMap', createParishClassMap(totalsMap))
+      state.set('parishMap', createParishClassMap(parishMap))
+
+      updateColors(filterByParish(parishPercentageMap))
 
     })
+
+let hoverInfo = document.querySelector('#hover-info')
+let parishName = document.querySelector('.parish-name')
+let parishTotal = document.querySelector('.parish-total')
+let parishQuestionTotal = document.querySelector('.parish-question-number')
+
+let mouseOverHandler = e => {
+  hoverInfo.style.visibility = 'visible'
+  parishName.innerHTML = e.target.id
+  //parishTotal.innerHTML = state.get('totalsMap')[e.target.classList[0]]
+  parishQuestionTotal.innerHTML = state.get('parishMap')[e.target.classList[0]] || 0
+}
+let mouseOutHandler = e => {
+  hoverInfo.style.visibility = 'hidden'
+}
+let mouseMoveHandler = e => {
+  let x = e.offsetX - 100
+  let y = e.offsetY - 150
+  hoverInfo.style.top = y + 'px'
+  hoverInfo.style.left = x + 'px'
+}
+
+let handlers = {
+  mouseover: mouseOverHandler,
+  mouseout: mouseOutHandler,
+  mousemove: mouseMoveHandler
+}
+
+let attachListeners = el => _.entries(handlers).forEach(([eventType, handler]) => el.addEventListener(eventType, handler))
+
+document.querySelectorAll('#parish-group path').forEach(attachListeners)
 
 resizeHandler()
 window.onresize = resizeHandler
