@@ -87,6 +87,7 @@ let onChangeHandler = s => updateMap(
   createSearch(
     _.entries(s)
       .filter(([field, value]) => !!value)
+      .filter(([field, value]) => _.isFunction(field))
       .map(([field, value]) => field(value))
   )
 )
@@ -116,7 +117,7 @@ const BUCKET_SIZE = 100 / 5
 
 let resetColors = () => {
   for (var i = 0, len = BUCKET_SIZE; i < len; i++) {
-    document.querySelectorAll('path.bucket-' + i).forEach(el => el.style.fill = '')
+    document.querySelectorAll('path').forEach(el => el.style.fill = '')
   }
 }
 
@@ -154,7 +155,7 @@ let updateMap = search =>
       let createParishClassMap = parishes => _.mapKeys(fips => fipsToClass(fips), parishes)
 
       state.set('totalsMap', createParishClassMap(totalsMap))
-      state.set('parishMap', createParishClassMap(parishMap))
+      state.set('parishMap', createParishClassMap(parishPercentageMap))
 
       updateColors(filterByParish(parishPercentageMap))
 
@@ -165,21 +166,12 @@ let parishName = document.querySelector('.parish-name')
 let parishTotal = document.querySelector('.parish-total')
 let parishQuestionTotal = document.querySelector('.parish-question-number')
 
-var formatThousands = function(n, dp){
-  var s = ''+(Math.floor(n)), d = n % 1, i = s.length, r = '';
-  while ( (i -= 3) > 0 ) { r = ',' + s.substr(i, 3) + r; }
-  return s.substr(0, i + 3) + r + 
-    (d ? '.' + Math.round(d * Math.pow(10, dp || 2)) : '');
-}; 
-
 let mouseOverHandler = e => {
   hoverInfo.style.visibility = 'visible'
   parishName.innerHTML = e.target.id
   let filtered = state.get('parishMap')[e.target.classList[0]]
-  let total = state.get('totalsMap')[e.target.classList[0]]
-  let perOneHundredThousand = formatThousands(((100000 * filtered) / total || 0).toFixed(2))
-  parishTotal.innerHTML = filtered || 0
-  parishQuestionTotal.innerHTML = perOneHundredThousand
+  //let total = state.get('totalsMap')[e.target.classList[0]]
+  parishQuestionTotal.innerHTML = filtered || 0
 }
 let mouseOutHandler = e => {
   hoverInfo.style.visibility = 'hidden'

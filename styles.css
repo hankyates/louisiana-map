@@ -57,7 +57,8 @@ section select {
   top: 0;
   left: 0;
 
+  width: 200px;
   background-color: white;
   border: 0.25em solid #08519c;
-  padding: 1em;
+  padding: 0.75em;
 }
